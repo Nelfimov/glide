@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.2.7](https://github.com/glide-wm/glide/compare/v0.2.6...v0.2.7) (2026-01-22)
+
+
+### Features
+
+* **layout:** add resize window command ([#102](https://github.com/glide-wm/glide/issues/102)) ([e7f0492](https://github.com/glide-wm/glide/commit/e7f04927b94518e54301236fd74cd93fce47e4f6))
+* **statusbar:** Add enable/disable and docs items  ([#96](https://github.com/glide-wm/glide/issues/96)) ([6823bda](https://github.com/glide-wm/glide/commit/6823bda9576c8f2c7fc4dcdb4d2772c002f9352d))
+
 ## [0.2.6](https://github.com/glide-wm/glide/compare/v0.2.5...v0.2.6) (2026-01-16)
 
 
