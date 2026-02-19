@@ -199,9 +199,14 @@ impl ConfigPartial {
 
 impl Config {
     pub fn load(custom_path: Option<&Path>) -> anyhow::Result<Config> {
-        let mut buf = String::new();
-        let (mut file, path) = match custom_path {
-            Some(path) => (File::open(path)?, path.to_path_buf()),
+        match custom_path {
+            Some(path) => {
+                let mut buf = String::new();
+                let mut file = File::open(path)?;
+                file.read_to_string(&mut buf)?;
+                Self::parse(&buf)
+                    .map_err(|e| anyhow::anyhow!("{}", format_toml_error(e, &buf, path)))
+            }
             None => {
                 let mut selected: Option<(File, PathBuf)> = None;
                 for path in default_config_paths() {
@@ -214,14 +219,19 @@ impl Config {
                         Err(e) => return Err(e.into()),
                     }
                 }
+
                 match selected {
-                    Some(pair) => pair,
-                    None => return Ok(Config::default()),
+                    Some((mut file, path)) => {
+                        let mut buf = String::new();
+                        file.read_to_string(&mut buf)?;
+                        Self::parse(&buf).map_err(|e| {
+                            anyhow::anyhow!("{}", format_toml_error(e, &buf, &path))
+                        })
+                    }
+                    None => Ok(Config::default()),
                 }
             }
-        };
-        file.read_to_string(&mut buf)?;
-        Self::parse(&buf).map_err(|e| anyhow::anyhow!("{}", format_toml_error(e, &buf, &path)))
+        }
     }
 
     pub fn default() -> Config {
